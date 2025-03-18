@@ -1,6 +1,6 @@
 const settings = {
   packname: 'FtKid',
-  author: 'FtKid',
+  author: 'bot',
   botName: "Ft Kid",
   botOwner: 'Ft Kid', // Your name
   ownerNumber: '918304002501', //Your number
