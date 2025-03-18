@@ -74,8 +74,8 @@ const { autoStatusCommand, handleStatusUpdate } = require('./commands/autostatus
 // Global settings
 global.packname = settings.packname;
 global.author = settings.author;
-global.channelLink = "https://whatsapp.com/channel/0029Va90zAnIHphOuO8Msp3A";
-global.ytch = "Mr Unique Hacker";
+global.Instagramlink = "https://www.instagram.com/_ft_kid?igsh=cXpvZmNtZjNuNm53";
+global.Instagram = "_ft_kid";
 
 // Add this near the top of main.js with other global configurations
 const channelInfo = {
@@ -145,7 +145,147 @@ async function handleMessages(sock, messageUpdate, printLog) {
             await handleBadwordDetection(sock, chatId, message, userMessage, senderId);
         }
 
+        // Then check const settings = require('./settings');
+const { loadCommands } = require('./utils');
+require('./config.js');
+const { isBanned } = require('./lib/isBanned');
+const yts = require('youtube-yts');
+const { fetchBuffer } = require('./lib/myfunc');
+const ytdl = require('./lib/ytdl2');
+const fs = require('fs');
+const fetch = require('node-fetch');
+
+// Command imports
+const tagAllCommand = require('./commands/tagall');
+const helpCommand = require('./commands/help');
+const banCommand = require('./commands/ban');
+const { promoteCommand } = require('./commands/promote');
+const { demoteCommand } = require('./commands/demote');
+const muteCommand = require('./commands/mute');
+const unmuteCommand = require('./commands/unmute');
+const stickerCommand = require('./commands/sticker');
+const isAdmin = require('./helpers/isAdmin');
+const warnCommand = require('./commands/warn');
+const warningsCommand = require('./commands/warnings');
+const ttsCommand = require('./commands/tts');
+const { tictactoeCommand, handleTicTacToeMove } = require('./commands/tictactoe');
+const { incrementMessageCount, topMembers } = require('./commands/topmembers');
+const ownerCommand = require('./commands/owner');
+const deleteCommand = require('./commands/delete');
+const { handleAntilinkCommand, handleLinkDetection } = require('./commands/antilink');
+const { Antilink } = require('./lib/antilink');
+const memeCommand = require('./commands/meme');
+const tagCommand = require('./commands/tag');
+const jokeCommand = require('./commands/joke');
+const quoteCommand = require('./commands/quote');
+const factCommand = require('./commands/fact');
+const weatherCommand = require('./commands/weather');
+const newsCommand = require('./commands/news');
+const kickCommand = require('./commands/kick');
+const simageCommand = require('./commands/simage');
+const attpCommand = require('./commands/attp');
+const { startHangman, guessLetter } = require('./commands/hangman');
+const { startTrivia, answerTrivia } = require('./commands/trivia');
+const { complimentCommand } = require('./commands/compliment');
+const { insultCommand } = require('./commands/insult');
+const { eightBallCommand } = require('./commands/eightball');
+const { lyricsCommand } = require('./commands/lyrics');
+const { dareCommand } = require('./commands/dare');
+const { truthCommand } = require('./commands/truth');
+const { clearCommand } = require('./commands/clear');
+const pingCommand = require('./commands/ping');
+const aliveCommand = require('./commands/alive');
+const blurCommand = require('./commands/img-blur');
+const welcomeCommand = require('./commands/welcome');
+const goodbyeCommand = require('./commands/goodbye');
+const githubCommand = require('./commands/github');
+const { handleAntiBadwordCommand, handleBadwordDetection } = require('./lib/antibadword');
+const antibadwordCommand = require('./commands/antibadword');
+const { handleChatbotCommand, handleChatbotResponse } = require('./commands/chatbot');
+const takeCommand = require('./commands/take');
+const { flirtCommand } = require('./commands/flirt');
+const characterCommand = require('./commands/character');
+const wastedCommand = require('./commands/wasted');
+const shipCommand = require('./commands/ship');
+const groupInfoCommand = require('./commands/groupinfo');
+const resetlinkCommand = require('./commands/resetlink');
+const staffCommand = require('./commands/staff');
+const unbanCommand = require('./commands/unban');
+const emojimixCommand = require('./commands/emojimix');
+const { handlePromotionEvent } = require('./commands/promote');
+const { handleDemotionEvent } = require('./commands/demote');
+const viewOnceCommand = require('./commands/viewonce');
+const clearSessionCommand = require('./commands/clearsession');
+const { autoStatusCommand, handleStatusUpdate } = require('./commands/autostatus');
+
+// Global settings
+global.packname = settings.packname;
+global.author = settings.author;
+global.Instagramlink = "https://www.instagram.com/_ft_kid?igsh=cXpvZmNtZjNuNm53";
+global.Instagram = "_ft_kid";
+
+
+async function handleMessages(sock, messageUpdate, printLog) {
+    try {
+        const { messages, type } = messageUpdate;
+        if (type !== 'notify') return;
+
+        const message = messages[0];
+        if (!message?.message) return;
+
+        const chatId = message.key.remoteJid;
+        const senderId = message.key.participant || message.key.remoteJid;
+        const isGroup = chatId.endsWith('@g.us');
+        
+        let userMessage = message.message?.conversation?.trim().toLowerCase() ||
+            message.message?.extendedTextMessage?.text?.trim().toLowerCase() || '';
+        userMessage = userMessage.replace(/\.\s+/g, '.').trim();
+
+        // Only log command usage
+        if (userMessage.startsWith('.')) {
+            console.log(`📝 Command used in ${isGroup ? 'group' : 'private'}: ${userMessage}`);
+        }
+
+        // Check if user is banned (skip ban check for unban command)
+        if (isBanned(senderId) && !userMessage.startsWith('.unban')) {
+            // Only respond occasionally to avoid spam
+            if (Math.random() < 0.1) { 
+                await sock.sendMessage(chatId, { 
+                    text: '❌ You are banned from using the bot. Contact an admin to get unbanned.',
+                    ...channelInfo
+                });
+            }
+            return;
+        }
+
+        // First check if it's a game move
+        if (/^[1-9]$/.test(userMessage) || userMessage.toLowerCase() === 'surrender') {
+            await handleTicTacToeMove(sock, chatId, senderId, userMessage);
+            return;
+        }
+
+        // Basic message response in private chat
+        if (!isGroup && (userMessage === 'hi' || userMessage === 'hello' || userMessage === 'bot' || userMessage === 'hlo' || userMessage === 'hey' || userMessage === 'bro')) {
+            await sock.sendMessage(chatId, {
+                text: 'Hi, How can I help you?\nYou can use .menu for more info and commands.',
+                ...channelInfo
+            });
+            return;
+        }
+
+        if (!message.key.fromMe) incrementMessageCount(chatId, senderId);
+
+        // Check for bad words FIRST, before ANY other processing
+        if (isGroup && userMessage) {
+            await handleBadwordDetection(sock, chatId, message, userMessage, senderId);
+        }
+
         // Then check for command prefix
+        if (!userMessage.startsWith('.')) {
+            if (isGroup) {
+                // Process non-command messages first
+                await handleChatbotResponse(sock, chatId, message, userMessage, senderId);
+for command prefix
         if (!userMessage.startsWith('.')) {
             if (isGroup) {
                 // Process non-command messages first
