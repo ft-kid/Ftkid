@@ -77,18 +77,7 @@ global.author = settings.author;
 global.Instagramlink = "https://www.instagram.com/_ft_kid?igsh=cXpvZmNtZjNuNm53";
 global.Instagram = "_ft_kid";
 
-// Add this near the top of main.js with other global configurations
-const channelInfo = {
-    contextInfo: {
-        forwardingScore: 999,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363161513685998@newsletter',
-            newsletterName: 'KnightBot MD',
-            serverMessageId: -1
-        }
-    }
-};
+
 
 async function handleMessages(sock, messageUpdate, printLog) {
     try {
